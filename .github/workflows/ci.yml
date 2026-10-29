@@ -1,0 +1,37 @@
+name: 560-Mesh source checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: headscale
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.1'
+      - name: Prepare pinned upstream and patch
+        run: node tools/sources.mjs
+      - name: Install dependencies
+        run: |
+          corepack enable
+          pnpm --dir sources/headplane install --frozen-lockfile
+      - name: Headplane unit and type checks
+        run: |
+          pnpm --dir sources/headplane test:unit
+          pnpm --dir sources/headplane typecheck
+      - name: Platform and operations checks
+        run: |
+          npm test
+          python3 -B -m unittest discover -s tests -p 'test_*.py'
+          node tools/check.mjs
+      - name: Initializer checks
+        working-directory: head-docker
+        run: node --test tests/initialize-dns.test.mjs
+      - name: Compose syntax
+        working-directory: .
+        run: docker compose config --quiet

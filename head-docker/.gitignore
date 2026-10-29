@@ -1,0 +1,14 @@
+.env
+.docker/
+bin/
+data/
+backups/
+images/
+config/headscale/config.yaml
+config/headplane/config.yaml
+certificates/
+logs/
+.secrets/
+build-cache/
+__pycache__/
+*.pyc

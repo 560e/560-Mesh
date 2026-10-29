@@ -1,0 +1,35 @@
+name: hs560
+services:
+  platform:
+    image: ${PLATFORM_IMAGE:-560-mesh:local}
+    build:
+      context: ..
+      dockerfile: head-docker/Dockerfile
+    restart: unless-stopped
+    init: true
+    user: "65532:65532"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+    tmpfs:
+      - /tmp:rw,nosuid,noexec,size=64m,uid=65532,gid=65532,mode=1770
+      - /var/run/headscale:rw,nosuid,noexec,size=8m,uid=65532,gid=65532,mode=0700
+    ports:
+      - "127.0.0.1:56005:3000"
+      - "127.0.0.1:56201:8080"
+    volumes:
+      - ./config/headscale:/etc/headscale:ro
+      - ./config/headplane:/etc/headplane:ro
+      - ./data/headscale:/var/lib/headscale
+      - ./data/headplane:/var/lib/headplane
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks: [control_net]
+networks:
+  control_net:
+    driver: bridge

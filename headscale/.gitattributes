@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.mjs text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.patch text eol=lf
+# A unified diff's blank context lines contain a required single space.
+*.patch -whitespace
+Dockerfile text eol=lf
