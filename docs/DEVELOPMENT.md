@@ -58,6 +58,6 @@ docker build -f head-docker/Dockerfile -t 560-mesh:local .
 
 ## CI与贡献
 
-GitHub Actions执行锁定源码准备、Headplane单测/类型检查、平台与运维测试、初始化DNS和Compose语法检查，不构建或推送镜像。
+源码检查工作流执行锁定源码准备、Headplane单测/类型检查、平台与运维测试、初始化DNS和Compose语法检查。独立的Docker Hub发布工作流只在手动触发或推送v*版本标签时构建上传，配置见DOCKERHUB.md。
 新增行为应覆盖重要回归条件；文案与低风险可逆修改不要求机械复制实现的测试。
 保留上游许可与来源，新增功能在补丁对应上游CHANGELOG的Next段说明；不要改锁文件来掩盖补丁不一致。

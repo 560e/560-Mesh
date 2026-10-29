@@ -6,3 +6,5 @@
 - Nginx/reverse proxies, DNS, FRP, firewalls and unrelated services are managed by the operator; do not modify/reload them.
 - Do not automatically build/publish images or deployment packages. Perform them only after the human explicitly asks.
 - Source compilation, unit/type checks and isolated disposable demos are allowed. Do not use production data for screenshots.
+
+- The human explicitly authorized Docker Hub publication through workflow_dispatch and v* version-tag pushes. Do not manually dispatch it or create release tags without a separate request.

@@ -4,7 +4,7 @@
 
 基于 [Headscale](https://github.com/juanfont/headscale) 与 [Headplane](https://github.com/tale/headplane) 的自托管组网管理平台。提供中文控制台、按用户分组的设备工作台、可复用的设备接入命令，以及 Docker Compose 部署。
 
-[快速部署](docs/DEPLOYMENT.md) · [使用教程](docs/USER-GUIDE.md) · [配置参考](docs/CONFIGURATION.md) · [升级备份](docs/UPGRADE.md) · [开发指南](docs/DEVELOPMENT.md) · [常见问题](docs/TROUBLESHOOTING.md)
+[镜像发布配置](docs/DOCKERHUB.md) · [快速部署](docs/DEPLOYMENT.md) · [使用教程](docs/USER-GUIDE.md) · [配置参考](docs/CONFIGURATION.md) · [升级备份](docs/UPGRADE.md) · [开发指南](docs/DEVELOPMENT.md) · [常见问题](docs/TROUBLESHOOTING.md)
 
 ## 界面预览
 
@@ -40,7 +40,7 @@
 
 ## 快速开始
 
-当前仓库发布的是源码。**尚未提供可从 Docker Hub/GHCR 拉取的 560-mesh 镜像；请先构建本地镜像。** 本仓库不自动构建或发布部署包。
+当前仓库发布的是源码。**尚未提供可从 Docker Hub/GHCR 拉取的 560-mesh 镜像；请先构建本地镜像。** 已配置手动/版本标签触发的 [Docker Hub镜像发布](docs/DOCKERHUB.md)，需要维护者先填写用户名与Token；不自动制作离线部署包。
 
 环境：Linux x86_64 / amd64、已运行的 Docker Engine、Docker Compose V2，以及 Git。完整构建需要网络访问锁定的上游与依赖。
 
@@ -85,6 +85,7 @@ config/ 与 data/ 是持久目录。数据库与 enrollment-vault.key 必须一�
 - [备份、迁移、升级及回退](docs/UPGRADE.md)
 - [架构与数据流](docs/ARCHITECTURE.md)
 - [源码开发与验证](docs/DEVELOPMENT.md)
+- [Docker Hub用户名、Token与自动发布](docs/DOCKERHUB.md)
 - [故障排查](docs/TROUBLESHOOTING.md)
 - [截图说明与隐私处理](docs/SCREENSHOTS.md)
 
