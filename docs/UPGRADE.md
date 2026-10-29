@@ -15,7 +15,19 @@ tar -czf "../mesh-backup-$(date +%Y%m%d-%H%M%S).tar.gz" config data docker-compo
 备份成功后才继续升级；失败先docker compose start恢复原服务。
 备份包含密码相关数据和密钥，私下保存并限制读取。特别要同时保留Headplane数据库、enrollment-vault.key、network-settings和Headscale数据库；不能只复制一个数据库。
 
-## 从源码升级
+## 使用Docker Hub镜像升级
+
+当前默认镜像为zhangxw560/560-mesh:edge。使用原项目目录，先完成上面的一致性备份；在原YAML中将image改为该完整名称，保留其余参数。使用锚点时改一次，直接设置image时同时修改initialize/platform。
+
+~~~sh
+docker compose pull
+docker compose up -d
+docker compose ps -a
+~~~
+
+历史模板若pull_policy为never，可改为missing以允许下载。edge为可更新标签，更新前应备份；普通用户不需要源码构建。Docker Hub中存在的固定版本/摘要也可作为image。
+
+## 开发者从源码升级
 
 1. 将新源码拉取/克隆到临时开发目录，检查版本与迁移说明，显式构建一个新标签，例如560-mesh:next。不要覆盖仍供回退的旧标签。
 2. 完成上面的停机备份。

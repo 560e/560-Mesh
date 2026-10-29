@@ -4,7 +4,7 @@
 
 | 参数 | 默认值/格式 | 含义 |
 | --- | --- | --- |
-| image | 560-mesh:local | 先显式构建该镜像，或填写已导入的实际标签 |
+| image | zhangxw560/560-mesh:edge | 直接拉取已发布的Docker Hub镜像，无需本地构建 |
 | public_url | HTTPS域名 | 统一公开控制入口，当前初始化限定标准443，无路径 |
 | admin_username | admin560 | 首次管理员；不代表存在可登录的默认账号 |
 | admin_password | 占位符 | 必须修改，已有管理员不会被重置 |
@@ -12,6 +12,8 @@
 | headscale_port | 127.0.0.1:56012:8080 | 根页面和控制协议入口 |
 | magic_dns | false | 仅用于首次初始化，之后在后台修改DNS |
 | base_domain | 空字符串 | MagicDNS关闭时可空；开启时需独立内部域名 |
+
+initialize与platform默认pull_policy为missing；本地没有镜像时自动拉取。edge更新需先docker compose pull再up。
 
 不要用新的YAML模板覆盖已有生产文件。根Compose是直接部署入口；head-docker/docker-compose.yml是维护者单服务运维模板，二者数据目录和初始化步骤不同，不混用。
 

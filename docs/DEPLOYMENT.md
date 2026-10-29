@@ -2,30 +2,30 @@
 
 ## 环境
 
-验证环境为 Linux x86_64 / amd64。需要 Docker Engine、Docker Compose V2、Git；源码构建需要网络与足够磁盘。其他架构尚未完成组合镜像验收。
-公开域名使用 HTTPS，由部署者准备 DNS、证书和反代。应用不配置宿主 Nginx、防火墙、FRP 或其他服务。
+Linux x86_64 / amd64，已安装并运行Docker Engine与Docker Compose V2，能访问Docker Hub。
+默认镜像为zhangxw560/560-mesh:edge，Compose会自动拉取，无需Git、源码或本地编译。其他架构尚未完成组合镜像验收。
+公开域名使用HTTPS；DNS、证书和反代由部署者手工准备。应用不配置宿主Nginx、防火墙、FRP或其他服务。
 
-## 1. 构建源码镜像
+## 1. 下载Compose文件
+
+在新服务器的空项目目录中保存仓库根目录docker-compose.yml。可以在GitHub下载，也可以运行：
 
 ~~~sh
-git clone https://github.com/560e/560-Mesh.git
+mkdir -p 560-Mesh
 cd 560-Mesh
-docker build -f head-docker/Dockerfile -t 560-mesh:local .
+curl -fL https://raw.githubusercontent.com/560e/560-Mesh/main/docker-compose.yml -o docker-compose.yml
 ~~~
 
-保持仓库结构完整；Dockerfile 的构建上下文必须是仓库根目录。
-构建会校验上游与补丁，运行单元/类型检查并编译应用。不会向镜像仓库推送。
-此命令供部署者显式执行；此次源码公开没有重新构建或上传部署包。
-
-如已经持有维护者提供的历史镜像 tar，可先 docker load -i 实际文件.tar，再在 YAML 中填写 docker image ls 显示的实际标签。不存在的标签不能直接拉取。历史镜像可能仍显示旧品牌。
+后续操作都在此目录进行。这个单独YAML已包含初始化逻辑，不需要额外脚本或配置模板；容器会创建config/data。
+已有部署升级不要使用下载命令覆盖原YAML，请按 [升级说明](UPGRADE.md) 保留原配置和数据。
 
 ## 2. 修改根目录 docker-compose.yml
 
-只需填写顶部 x-settings：
+默认镜像已填写，只需修改顶部x-settings的域名、管理员账号密码和两个宿主端口：
 
 ~~~yaml
 x-settings:
-  image: &image "560-mesh:local"
+  image: &image "zhangxw560/560-mesh:edge"
   public_url: &public_url "https://mesh.example.com"
   magic_dns: &magic_dns "false"
   base_domain: &base_domain ""
@@ -52,7 +52,7 @@ docker compose logs --tail=80 initialize
 docker compose logs --tail=100 platform
 ~~~
 
-独立命令形式为 docker-compose。
+独立命令形式为docker-compose。两个服务的pull_policy均为missing：本机没有该镜像时自动下载，不需要先docker load或docker build。
 initialize 以有限权限准备目录、生成配置并创建管理员，完成后 Exited(0) 正常；platform 是唯一长期运行业务容器。
 真实config/data生成在根目录。再次启动保留已有管理员密码，修改YAML密码不会重置已有账号。
 直接Compose方式不读取SHA清单，也不需要额外参数文件。
@@ -81,3 +81,16 @@ initialize 以有限权限准备目录、生成配置并创建管理员，完成
 5. 通过实际设备验证组网IP、用户隔离和路由；确认备份方案。
 
 公网入口配置错误不能通过重置数据库解决。排错见 [故障排查](TROUBLESHOOTING.md)。
+
+## 更新edge镜像
+
+edge是可更新标签。已有同名本地镜像时，单独up不会强制下载新版本。维护窗口先按升级文档备份，再运行：
+
+~~~sh
+docker compose pull
+docker compose up -d
+docker compose ps -a
+~~~
+
+保留原域名、端口、账号、项目名和config/data。需要固定版本时，改用Docker Hub中实际存在的版本标签或摘要。
+源码构建仅供开发者选择，见 [开发指南](DEVELOPMENT.md)；普通部署不需要构建环境。

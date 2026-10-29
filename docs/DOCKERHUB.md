@@ -80,7 +80,7 @@ git push origin v1.2.0-dev.3
 image: &image "YOUR_DOCKER_ID/560-mesh:1.2.3"
 ~~~
 
-将initialize与platform的pull_policy从never改为missing，以便本机没有该版本时下载，或先自行docker pull。
+当前部署模板已默认使用zhangxw560/560-mesh:edge，两处pull_policy均为missing，本地没有镜像时会下载。使用历史never模板时可改为missing，或先自行docker pull。
 更新已有版本时先备份config/data，保留原域名、端口和挂载，再按升级文档切换镜像。更新Docker Hub标签不会自动替换已经运行的容器。
 
 ## 工作流行为

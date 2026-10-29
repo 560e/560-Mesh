@@ -1,11 +1,11 @@
-# 560-Mesh：先按部署说明构建560-mesh:local，再填写顶部参数。
+# 560-Mesh：填写域名、宿主端口和管理员账号密码后，直接启动。
 # 修改本区参数，然后执行 docker-compose up -d。
 # public_url是浏览器访问的HTTPS地址；两个port是本机反代后端端口。
 # 不安装、修改、重载或重启Nginx；HTTPS反代由你手工配置。
 name: 560-mesh
 
 x-settings:
-  image: &image "560-mesh:local"
+  image: &image "zhangxw560/560-mesh:edge"
   public_url: &public_url "https://mesh.example.com"
   # 仅用于首次初始化；已有 DNS 设置请在管理台修改，升级时保留原值。
   magic_dns: &magic_dns "false"
@@ -18,7 +18,7 @@ x-settings:
 services:
   initialize:
     image: *image
-    pull_policy: never
+    pull_policy: missing
     restart: "no"
     init: true
     user: "0:0"
@@ -151,7 +151,7 @@ services:
 
   platform:
     image: *image
-    pull_policy: never
+    pull_policy: missing
     depends_on:
       initialize:
         condition: service_completed_successfully

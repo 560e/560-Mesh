@@ -13,7 +13,7 @@ docker compose logs --tail=100 platform
 ## initialize退出
 
 退出0正常，表示一次性初始化完成。退出1检查占位密码、账号格式、域名、目录权限与日志。
-缺少560-mesh:local镜像时应先按部署文档构建；pull_policy为never，不会自动下载一个不存在的镜像。
+当前模板使用zhangxw560/560-mesh:edge，pull_policy为missing，会下载缺少的镜像。下载失败先检查网络和Docker Hub访问；若仍显示560-mesh:local或never，请核对是否用了旧模板。无需为普通部署本地构建镜像。
 
 ## platform不健康
 

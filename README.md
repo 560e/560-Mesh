@@ -40,32 +40,34 @@
 
 ## 快速开始
 
-当前仓库发布的是源码。**尚未提供可从 Docker Hub/GHCR 拉取的 560-mesh 镜像；请先构建本地镜像。** 已配置手动/版本标签触发的 [Docker Hub镜像发布](docs/DOCKERHUB.md)，需要维护者先填写用户名与Token；不自动制作离线部署包。
+默认使用已发布的 [Docker Hub镜像](https://hub.docker.com/r/zhangxw560/560-mesh)：**zhangxw560/560-mesh:edge**，无需Git、源码或本地构建。
 
-环境：Linux x86_64 / amd64、已运行的 Docker Engine、Docker Compose V2，以及 Git。完整构建需要网络访问锁定的上游与依赖。
+环境：Linux x86_64 / amd64、已运行的 Docker Engine 和 Docker Compose V2，可访问Docker Hub。
+
+下载一个Compose文件到新的项目目录：
 
 ~~~sh
-git clone https://github.com/560e/560-Mesh.git
+mkdir -p 560-Mesh
 cd 560-Mesh
-docker build -f head-docker/Dockerfile -t 560-mesh:local .
+curl -fL https://raw.githubusercontent.com/560e/560-Mesh/main/docker-compose.yml -o docker-compose.yml
 ~~~
 
-打开根目录 docker-compose.yml，修改顶部 x-settings 的 public_url、管理员账号密码和宿主端口，然后运行：
+打开docker-compose.yml，只修改顶部x-settings的public_url、admin_username、admin_password、admin_port和headscale_port，然后运行：
 
 ~~~sh
 docker compose up -d
 docker compose ps -a
 ~~~
 
-使用独立命令的系统可改为 docker-compose up -d。
-initialize 退出0属于正常完成；platform 应持续运行并变为 healthy。
-新安装没有可使用的默认密码，必须替换 CHANGE_ME_BEFORE_START。
+使用独立命令的系统可改为docker-compose up -d。Compose会自动下载缺少的镜像；initialize退出0表示初始化完成，platform应持续运行并变为healthy。
+必须替换密码占位符CHANGE_ME_BEFORE_START。新安装默认关闭MagicDNS，base_domain可留空。
 
-配置有效 HTTPS 与手工反代后：
+有效HTTPS与手工反代配置完成后：
 - 下载首页与控制入口：https://你的域名/
 - 管理台：https://你的域名/adminis/
 
-详细步骤及手工反代字段见 [部署说明](docs/DEPLOYMENT.md)。项目不改动 Nginx、FRP、DNS、防火墙或其他项目，也不占用宿主80/443。
+edge会随维护者发布更新；升级前备份config/data，再执行docker compose pull和docker compose up -d。详细步骤见 [部署说明](docs/DEPLOYMENT.md) 与 [升级说明](docs/UPGRADE.md)。
+项目不改动Nginx、FRP、DNS、防火墙或其他项目，也不占用宿主80/443。[源码构建](docs/DEVELOPMENT.md) 仍供开发者选择。
 
 ## 端口与数据
 
